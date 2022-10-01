@@ -17,12 +17,17 @@ class StockTransactionController extends AbstractController
     {
         //$notification->getOrder()->getBuyer()->getEmail() . '<br>';
         $order = new class {
+            public function getId()
+            {
+                return 1;
+            }
+
             public function getBuyer(): object
             {
                 return new class {
                     public function getEmail(): string
                     {
-                        return 'email@example.com';
+                        return 'kroke12@wp.pl';
                     }
                 };
             }
