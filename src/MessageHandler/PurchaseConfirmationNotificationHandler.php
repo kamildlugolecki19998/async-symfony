@@ -2,6 +2,7 @@
 
 namespace App\MessageHandler;
 
+use Mpdf\Mpdf;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use App\Message\PurchaseConfirmationNotification;
@@ -18,17 +19,25 @@ class PurchaseConfirmationNotificationHandler
     public function __invoke(PurchaseConfirmationNotification $notification)
     {
         // 1. Create a PDF contract not
-        echo 'Creating a PDF contract note ...<br>';
 
-        // 2. Email contract note to the buyer
+        $mpdf = new Mpdf();
 
-//        echo 'Emailing contract note to ' . $notification->getOrder()->getBuyer()->getEmail() . '<br>';
+        $content = "<h1> Contract Note For Order {$notification->getOrder()->getId()}</h1>";
+        $content .= '<p>Total: <b> $1898.25</b>></p>';
+
+        $mpdf->writeHTML($content);
+
+        $contractNotePdf = $mpdf->output('', 'S');
+
+
+        //        echo 'Emailing contract note to ' . $notification->getOrder()->getBuyer()->getEmail() . '<br>';
 
         $email = (new Email())
             ->from('sales@stock.com')
             ->to($notification->getOrder()->getBuyer()->getEmail())
             ->subject('Contract note for order' . $notification->getOrder()->getId())
-            ->text('Here is your note');
+            ->text('Here is your note')
+            ->attach($contractNotePdf, 'contract-note.pdf');
 
         $this->mailer->send($email);
     }
