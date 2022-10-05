@@ -185,3 +185,5 @@ fabric.properties
 
 notes.txt
 docker-compose.override.yml
+
+mysql

@@ -22,7 +22,7 @@ class PurchaseConfirmationNotificationHandler
 
         $mpdf = new Mpdf();
 
-        $content = "<h1> Contract Note For Order {$notification->getOrder()->getId()}</h1>";
+        $content = "<h1> Contract Note For Order {$notification->getOrderId()}</h1>";
         $content .= '<p>Total: <b> $1898.25</b>></p>';
 
         $mpdf->writeHTML($content);
@@ -34,8 +34,8 @@ class PurchaseConfirmationNotificationHandler
 
         $email = (new Email())
             ->from('sales@stock.com')
-            ->to($notification->getOrder()->getBuyer()->getEmail())
-            ->subject('Contract note for order' . $notification->getOrder()->getId())
+            ->to('email@example.com')
+            ->subject('Contract note for order' . $notification->getOrderId())
             ->text('Here is your note')
             ->attach($contractNotePdf, 'contract-note.pdf');
 
